@@ -3,8 +3,7 @@ package com.example.notesapp.activities.main
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.notesapp.R
-import com.example.notesapp.activities.CreateNotesActivity
+import com.example.notesapp.activities.createnotes.CreateNotesActivity
 import com.example.notesapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -14,7 +13,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.addMyNotes.setOnClickListener{
-            startActivity(Intent(applicationContext,CreateNotesActivity::class.java))
+            startActivity(Intent(applicationContext, CreateNotesActivity::class.java))
         }
     }
 }
