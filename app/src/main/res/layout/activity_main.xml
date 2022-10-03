@@ -4,15 +4,100 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:background="@color/background"
+    tools:context=".activities.main.MainActivity">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/titleNotes"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="12dp"
+        android:fontFamily="@font/ubuntu_bold"
+        android:text="@string/my_notes"
+        android:textColor="@color/textColor"
+        android:textSize="20sp"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/linear_head"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="8dp"
+        android:background="@color/background_search"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        app:layout_constraintTop_toBottomOf="@id/titleNotes">
+
+        <ImageView
+            android:layout_width="20sp"
+            android:layout_height="25dp"
+            android:src="@drawable/ic_search"
+            app:tint="@color/textColor" />
+
+        <EditText
+            android:id="@+id/inputSearch"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginStart="12dp"
+            android:background="@null"
+            android:fontFamily="@font/ubuntu_regular"
+            android:hint="@string/search_my_notes"
+            android:imeOptions="actionDone"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:textColor="@color/textColor"
+            android:textColorHint="@color/textHint"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/notesRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginEnd="2dp"
+        android:paddingStart="0dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="12dp"
+        app:layout_constraintBottom_toTopOf="@id/linearEnd"
+        app:layout_constraintTop_toBottomOf="@id/linear_head" />
+
+
+    <LinearLayout
+        android:id="@+id/linearEnd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background_end"
+        android:orientation="horizontal"
+        android:padding="15dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <ImageView
+            android:id="@+id/addLink"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginLeft="20sp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_weblink"
+            app:tint="@color/textColor" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/addMyNotes"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="30dp"
+        android:background="@drawable/background_add"
+        android:src="@drawable/ic_add"
+        app:layout_constraintBottom_toTopOf="@id/linearEnd"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/linearEnd" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

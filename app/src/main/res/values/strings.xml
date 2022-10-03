@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">NotesApp</string>
+    <string name="search_my_notes">Search My Notes</string>
+    <string name="my_notes">My Notes</string>
+    <string name="note_title">Note Title</string>
+    <string name="note_subtitle">Note SubTitle</string>
+    <string name="type_note_here">Type Note Here ...</string>
 </resources>
