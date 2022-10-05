@@ -5,22 +5,22 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "notes_table")
-data class Note (
+data class Note(
     @PrimaryKey(autoGenerate = true)
-    private val id: Int,
+    val id: Int,
     @ColumnInfo(name = "title")
-    private val title: String,
+    val title: String,
     @ColumnInfo(name = "date_time")
-    private val datetime: String,
+    val datetime: String,
     @ColumnInfo(name = "subtitle")
-    private val subtitle: String,
+    val subtitle: String,
     @ColumnInfo(name = "note_text")
-    private val noteText: String,
+    val noteText: String,
     @ColumnInfo(name = "image_path")
-    private val imagePath: String,
+    val imagePath: String,
     @ColumnInfo(name = "color")
-    private val color: String,
+    val color: String,
     @ColumnInfo(name = "web_link")
-    private val webLink: String
+    val webLink: String
 
 )

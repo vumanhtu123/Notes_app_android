@@ -14,4 +14,7 @@ interface NoteDAO {
 
     @Delete
     fun deleteNote(note: Note)
+
+    @Update
+    fun updateNote(note: Note)
 }

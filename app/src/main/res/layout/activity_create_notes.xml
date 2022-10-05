@@ -107,6 +107,7 @@
                 app:layout_constraintTop_toTopOf="@id/edNoteSubTitle" />
 
             <EditText
+                android:id="@+id/edNoteMain"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
