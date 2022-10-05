@@ -9,8 +9,7 @@ import com.example.notesapp.databinding.ItemContainerBinding
 
 class NoteRecyclerViewAdapter(
     val context: Context,
-    val noteClickInterface: NoteClickInterface,
-    val noteClickDelete: NoteClickDeleteInterface
+    private val allNotesList: List<Note>
 
 ) : RecyclerView.Adapter<NoteRecyclerViewAdapter.NoteViewHolder>() {
 
@@ -22,7 +21,7 @@ class NoteRecyclerViewAdapter(
         fun onNoteClickDelete(note: Note)
     }
 
-    private var allNotes = ArrayList<Note>()
+//    private var allNotes = ArrayList<Note>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
         val binding =
             ItemContainerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -32,15 +31,16 @@ class NoteRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
         with(holder) {
-            with(allNotes[position]) {
-//                binding.textTitle.setText()
-//                binding.textDateTime.text
+            with(allNotesList[position]) {
+                binding.textTitle.text = title
+                binding.textDateTime.text = datetime
+                binding.textSubTitle.text = subtitle
             }
         }
     }
 
     override fun getItemCount(): Int {
-        return allNotes.size
+        return allNotesList.size
     }
 
     inner class NoteViewHolder(var binding: ItemContainerBinding) :

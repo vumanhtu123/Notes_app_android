@@ -42,6 +42,6 @@
         android:fontFamily="@font/ubuntu_regular"
         android:includeFontPadding="false"
         android:textColor="@color/textColor"
-        android:textSize="7sp" />
+        android:textSize="8sp" />
 
 </LinearLayout>
