@@ -7,12 +7,12 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="textColor">#FFFFFFFF</color>
-    <color name="yellow">#FFEB3B</color>
+    <color name="yellow">#FFC107</color>
     <color name="background_search">#333333</color>
     <color name="colorIcon">#A4A4A4</color>
     <color name="orange">#FFC107</color>
     <color name="color_miscellaneous">#D4131111</color>
     <color name="default_color">#333333</color>
-    <color name="color_red">#BC1B02</color>
+    <color name="color_red">#DD2719</color>
     <color name="color_blue">#2196F3</color>
 </resources>

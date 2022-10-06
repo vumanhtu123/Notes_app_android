@@ -1,6 +1,7 @@
 package com.example.notesapp.adapters
 
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
@@ -42,6 +43,12 @@ class NoteRecyclerViewAdapter(
 
                 } else {
                     gradientDrawable.setColor(Color.parseColor("#333333"))
+                }
+                if (imagePath != null){
+                    binding.imageViewNote.setImageBitmap(BitmapFactory.decodeFile(imagePath))
+                    binding.imageViewNote.visibility = View.VISIBLE
+                }else{
+                    binding.imageViewNote.visibility = View.GONE
                 }
             }
         }

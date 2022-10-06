@@ -1,11 +1,18 @@
 package com.example.notesapp.activities.createnotes
 
+import android.app.Activity
+import android.database.Cursor
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
+import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.notesapp.R
@@ -13,7 +20,9 @@ import com.example.notesapp.data.Note
 import com.example.notesapp.databinding.ActivityCreateNotesBinding
 import com.example.notesapp.viewmodels.CreateViewModel
 import com.example.notesapp.viewmodels.MyViewModelFactory
+import com.github.drjacky.imagepicker.ImagePicker
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -26,7 +35,8 @@ class CreateNotesActivity : AppCompatActivity() {
         SimpleDateFormat("EEEE, dd MMMM yyyy HH:mm a", Locale.getDefault()).format(
             Date()
         )
-    private var select = "#333333"
+    private var selectColor = "#333333"
+    private var selectImage = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,8 +65,8 @@ class CreateNotesActivity : AppCompatActivity() {
                 formatter,
                 subTitle,
                 noteMain,
-                null.toString(),
-                select,
+                selectImage,
+                selectColor,
                 null.toString()
             )
             createViewModel.addNote(note)
@@ -84,7 +94,7 @@ class CreateNotesActivity : AppCompatActivity() {
             }
         }
         binding.layoutMiscellaneous.viewColor1.setOnClickListener {
-            select = "#333333"
+            selectColor = "#333333"
             binding.layoutMiscellaneous.imageColor1.setImageResource(R.drawable.ic_done)
             binding.layoutMiscellaneous.imageColor2.setImageResource(0)
             binding.layoutMiscellaneous.imageColor3.setImageResource(0)
@@ -93,7 +103,7 @@ class CreateNotesActivity : AppCompatActivity() {
             setSubtitleColor()
         }
         binding.layoutMiscellaneous.viewColor2.setOnClickListener {
-            select = "#FFEB3B"
+            selectColor = "#FFEB3B"
             binding.layoutMiscellaneous.imageColor1.setImageResource(0)
             binding.layoutMiscellaneous.imageColor2.setImageResource(R.drawable.ic_done)
             binding.layoutMiscellaneous.imageColor3.setImageResource(0)
@@ -102,7 +112,7 @@ class CreateNotesActivity : AppCompatActivity() {
             setSubtitleColor()
         }
         binding.layoutMiscellaneous.viewColor3.setOnClickListener {
-            select = "#BC1B02"
+            selectColor = "#BC1B02"
             binding.layoutMiscellaneous.imageColor1.setImageResource(0)
             binding.layoutMiscellaneous.imageColor2.setImageResource(0)
             binding.layoutMiscellaneous.imageColor3.setImageResource(R.drawable.ic_done)
@@ -111,7 +121,7 @@ class CreateNotesActivity : AppCompatActivity() {
             setSubtitleColor()
         }
         binding.layoutMiscellaneous.viewColor4.setOnClickListener {
-            select = "#2196F3"
+            selectColor = "#2196F3"
             binding.layoutMiscellaneous.imageColor1.setImageResource(0)
             binding.layoutMiscellaneous.imageColor2.setImageResource(0)
             binding.layoutMiscellaneous.imageColor3.setImageResource(0)
@@ -120,7 +130,7 @@ class CreateNotesActivity : AppCompatActivity() {
             setSubtitleColor()
         }
         binding.layoutMiscellaneous.viewColor5.setOnClickListener {
-            select = "#FF000000"
+            selectColor = "#FF000000"
             binding.layoutMiscellaneous.imageColor1.setImageResource(0)
             binding.layoutMiscellaneous.imageColor2.setImageResource(0)
             binding.layoutMiscellaneous.imageColor3.setImageResource(0)
@@ -128,12 +138,48 @@ class CreateNotesActivity : AppCompatActivity() {
             binding.layoutMiscellaneous.imageColor5.setImageResource(R.drawable.ic_done)
             setSubtitleColor()
         }
+        binding.layoutMiscellaneous.layoutAddImage.setOnClickListener {
+            Toast.makeText(this, "onclick", Toast.LENGTH_SHORT).show()
+            launcher.launch(
+                ImagePicker.with(this)
+                    .galleryOnly()
+                    .createIntent()
+            )
+        }
     }
+
+    private val launcher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == Activity.RESULT_OK) {
+                val uri = it.data?.data!!
+                //toán tử !! tránh kiểm tra null khi biết chắc chắn biến không null
+                // Use the uri to load the image
+                var inputStream: InputStream = contentResolver.openInputStream(uri)!!
+                var bitmap: Bitmap = BitmapFactory.decodeStream(inputStream)
+                binding.imageNote.setImageBitmap(bitmap)
+                binding.imageNote.visibility = View.VISIBLE
+                selectImage = getPathFromUri(uri)
+            }
+        }
+
+    private fun getPathFromUri(uriContent: Uri): String {
+        var filePath: String
+        var cursor: Cursor? = contentResolver.query(uriContent, null, null, null, null)
+        if (cursor == null) {
+            filePath = uriContent.path.toString()
+        } else {
+            cursor.moveToFirst()
+            var index: Int = cursor.getColumnIndex("_data")
+            filePath = cursor.getString(index)
+            cursor.close()
+        }
+        return filePath
+    }
+
 
     private fun setSubtitleColor() {
         var gradientDrawable = GradientDrawable()
-        gradientDrawable.setColor(Color.parseColor(select))
+        gradientDrawable.setColor(Color.parseColor(selectColor))
         binding.viewSubtitle.background = gradientDrawable
-        Color.TRANSPARENT
     }
 }

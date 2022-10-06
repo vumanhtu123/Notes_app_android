@@ -65,4 +65,6 @@ dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.7.20'
     //cardview
     implementation("androidx.cardview:cardview:1.0.0")
+    //image picker
+    implementation 'com.github.Drjacky:ImagePicker:2.3.20'
 }

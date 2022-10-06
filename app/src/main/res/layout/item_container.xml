@@ -14,6 +14,15 @@
         android:background="@drawable/background_note"
         android:orientation="vertical">
 
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/imageViewNote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:visibility="gone"
+            app:riv_corner_radius_top_left="10dp"
+            app:riv_corner_radius_top_right="10dp" />
+
         <TextView
             android:id="@+id/textTitle"
             android:layout_width="match_parent"
