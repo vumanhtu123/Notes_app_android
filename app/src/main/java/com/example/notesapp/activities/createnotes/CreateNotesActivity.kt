@@ -11,17 +11,21 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
-import android.widget.Toast
+import android.widget.EditText
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.notesapp.R
 import com.example.notesapp.data.Note
 import com.example.notesapp.databinding.ActivityCreateNotesBinding
+import com.example.notesapp.utilities.Coroutines
+import com.example.notesapp.utilities.CreateDialog
 import com.example.notesapp.viewmodels.CreateViewModel
 import com.example.notesapp.viewmodels.MyViewModelFactory
 import com.github.drjacky.imagepicker.ImagePicker
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.delay
 import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.*
@@ -51,6 +55,9 @@ class CreateNotesActivity : AppCompatActivity() {
             insertDataToDataBase()
         }
         initMiscellaneous()
+        binding.layoutMiscellaneous.layoutAddUrl.setOnClickListener {
+            showAddURLDialog()
+        }
     }
 
     private fun insertDataToDataBase() {
@@ -67,14 +74,19 @@ class CreateNotesActivity : AppCompatActivity() {
                 noteMain,
                 selectImage,
                 selectColor,
-                null.toString()
+                binding.textWebURL.text.toString()
             )
             createViewModel.addNote(note)
-            Toast.makeText(this, "Successfully added", Toast.LENGTH_SHORT).show()
+            Snackbar.make(binding.root, "Successfully Added", Snackbar.LENGTH_LONG).show()
         } else {
-            Toast.makeText(this, "Successfully fail", Toast.LENGTH_SHORT).show()
+            Snackbar.make(binding.root, "Successfully Fail", Snackbar.LENGTH_LONG).show()
         }
-        finish()
+        Coroutines.io {
+            runCatching {
+                delay(3000)
+                finish()
+            }
+        }
     }
 
     private fun checkNote(title: String, subTitle: String, noteMain: String): Boolean {
@@ -139,7 +151,6 @@ class CreateNotesActivity : AppCompatActivity() {
             setSubtitleColor()
         }
         binding.layoutMiscellaneous.layoutAddImage.setOnClickListener {
-            Toast.makeText(this, "onclick", Toast.LENGTH_SHORT).show()
             launcher.launch(
                 ImagePicker.with(this)
                     .galleryOnly()
@@ -181,5 +192,26 @@ class CreateNotesActivity : AppCompatActivity() {
         var gradientDrawable = GradientDrawable()
         gradientDrawable.setColor(Color.parseColor(selectColor))
         binding.viewSubtitle.background = gradientDrawable
+    }
+
+    private fun showAddURLDialog() {
+        CreateDialog(R.layout.layout_add_url, this, 0).also { dialog ->
+            val Urlink = dialog.findViewById<EditText>(R.id.edAddURL)
+            Urlink.requestFocus()
+            dialog.findViewById<View>(R.id.textAdd).setOnClickListener {
+                if (Urlink.text.isEmpty()) {
+                    Snackbar.make(binding.root, "No URL", Snackbar.LENGTH_LONG).show()
+                    dialog.dismiss()
+                } else {
+                    binding.textWebURL.text = Urlink.text.toString()
+                    binding.layoutURL.visibility = View.VISIBLE
+                    dialog.dismiss()
+                }
+            }
+            dialog.findViewById<View>(R.id.textCancel).setOnClickListener {
+                dialog.dismiss()
+            }
+            dialog.show()
+        }
     }
 }

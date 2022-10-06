@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.notesapp.activities.createnotes.CreateNotesActivity
 import com.example.notesapp.adapters.NoteRecyclerViewAdapter
@@ -30,7 +29,8 @@ class MainActivity : AppCompatActivity() {
             for (i in noteList) {
                 Log.e("eee", "onCreateView : $i")
             }
-            binding.notesRecyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+            binding.notesRecyclerView.layoutManager =
+                StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
             binding.notesRecyclerView.adapter = NoteRecyclerViewAdapter(this, noteList)
         }
     }
