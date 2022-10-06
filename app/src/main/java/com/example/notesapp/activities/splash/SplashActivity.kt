@@ -16,7 +16,7 @@ class SplashActivity : AppCompatActivity() {
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
         Coroutines.io {
-            delay(4000)
+            delay(2000)
             startActivity(Intent(applicationContext,MainActivity::class.java))
             finish()
         }

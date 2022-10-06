@@ -63,4 +63,6 @@ dependencies {
 
     // Kotlin components
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.7.20'
+    //cardview
+    implementation("androidx.cardview:cardview:1.0.0")
 }

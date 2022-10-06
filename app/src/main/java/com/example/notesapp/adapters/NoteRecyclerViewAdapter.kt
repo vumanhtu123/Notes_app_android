@@ -1,7 +1,10 @@
 package com.example.notesapp.adapters
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.notesapp.data.Note
@@ -9,19 +12,11 @@ import com.example.notesapp.databinding.ItemContainerBinding
 
 class NoteRecyclerViewAdapter(
     val context: Context,
-    private val allNotesList: List<Note>
+    private val allNotesList: List<Note>,
 
-) : RecyclerView.Adapter<NoteRecyclerViewAdapter.NoteViewHolder>() {
+    ) : RecyclerView.Adapter<NoteRecyclerViewAdapter.NoteViewHolder>() {
 
-    interface NoteClickInterface {
-        fun onNoteClick(note: Note)
-    }
-
-    interface NoteClickDeleteInterface {
-        fun onNoteClickDelete(note: Note)
-    }
-
-//    private var allNotes = ArrayList<Note>()
+    //    private var allNotes = ArrayList<Note>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
         val binding =
             ItemContainerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -34,7 +29,20 @@ class NoteRecyclerViewAdapter(
             with(allNotesList[position]) {
                 binding.textTitle.text = title
                 binding.textDateTime.text = datetime
-                binding.textSubTitle.text = subtitle
+                if (subtitle.isEmpty()) {
+                    binding.textSubTitle.visibility = View.GONE
+                } else {
+                    binding.textSubTitle.text = subtitle
+                }
+
+                var gradientDrawable = GradientDrawable()
+                binding.layoutNote.background = gradientDrawable
+                if (color != null) {
+                    gradientDrawable.setColor(Color.parseColor(color))
+
+                } else {
+                    gradientDrawable.setColor(Color.parseColor("#333333"))
+                }
             }
         }
     }
