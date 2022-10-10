@@ -10,19 +10,19 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.notesapp.data.Note
 import com.example.notesapp.databinding.ItemContainerBinding
+import com.example.notesapp.utilities.NoteClickListeners
 
 class NoteRecyclerViewAdapter(
     val context: Context,
     private val allNotesList: List<Note>,
+    private val noteClickListeners: NoteClickListeners
 
-    ) : RecyclerView.Adapter<NoteRecyclerViewAdapter.NoteViewHolder>() {
+) : RecyclerView.Adapter<NoteRecyclerViewAdapter.NoteViewHolder>() , NoteClickListeners{
 
-    //    private var allNotes = ArrayList<Note>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
         val binding =
             ItemContainerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return NoteViewHolder(binding)
-
     }
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
@@ -36,7 +36,7 @@ class NoteRecyclerViewAdapter(
                     binding.textSubTitle.text = subtitle
                 }
 
-                var gradientDrawable = GradientDrawable()
+                val gradientDrawable = GradientDrawable()
                 binding.layoutNote.background = gradientDrawable
                 if (color != null) {
                     gradientDrawable.setColor(Color.parseColor(color))
@@ -44,11 +44,14 @@ class NoteRecyclerViewAdapter(
                 } else {
                     gradientDrawable.setColor(Color.parseColor("#333333"))
                 }
-                if (imagePath != null){
+                if (imagePath != null) {
                     binding.imageViewNote.setImageBitmap(BitmapFactory.decodeFile(imagePath))
                     binding.imageViewNote.visibility = View.VISIBLE
-                }else{
+                } else {
                     binding.imageViewNote.visibility = View.GONE
+                }
+                binding.layoutNote.setOnClickListener {
+                    noteClickListeners.noteClickUpDate(allNotesList[position], position)
                 }
             }
         }
@@ -60,4 +63,8 @@ class NoteRecyclerViewAdapter(
 
     inner class NoteViewHolder(var binding: ItemContainerBinding) :
         RecyclerView.ViewHolder(binding.root)
+
+    override fun noteClickUpDate(note: Note, position: Int) {
+
+    }
 }

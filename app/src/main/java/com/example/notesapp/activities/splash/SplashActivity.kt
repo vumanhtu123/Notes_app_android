@@ -3,7 +3,6 @@ package com.example.notesapp.activities.splash
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.notesapp.R
 import com.example.notesapp.activities.main.MainActivity
 import com.example.notesapp.databinding.ActivitySplashBinding
 import com.example.notesapp.utilities.Coroutines

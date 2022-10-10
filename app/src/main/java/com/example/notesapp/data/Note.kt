@@ -1,13 +1,16 @@
 package com.example.notesapp.data
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.android.parcel.Parcelize
 
 @Entity(tableName = "notes_table")
+@Parcelize
 data class Note(
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
+    var id: Int,
     @ColumnInfo(name = "title")
     val title: String,
     @ColumnInfo(name = "date_time")
@@ -22,5 +25,4 @@ data class Note(
     val color: String,
     @ColumnInfo(name = "web_link")
     val webLink: String
-
-)
+) : Parcelable

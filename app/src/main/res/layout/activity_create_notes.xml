@@ -101,7 +101,7 @@
                 android:layout_width="5dp"
                 android:layout_height="0dp"
                 android:layout_marginStart="12dp"
-                android:background="@drawable/background_subtitle"
+                android:background="#333333"
                 app:layout_constraintBottom_toBottomOf="@id/edNoteSubTitle"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/edNoteSubTitle" />

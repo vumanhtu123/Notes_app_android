@@ -9,15 +9,15 @@ class NoteRepository(private val noteDao: NoteDAO) {
     fun getAllNotes():LiveData<List<Note>>{
         return noteDao.getAllNotes()
     }
-    suspend fun addNote(note: Note) {
+    fun addNote(note: Note) {
         noteDao.insertNote(note)
     }
 
-    suspend fun updateNote(note: Note) {
+    fun updateNote(note: Note) {
         noteDao.updateNote(note)
     }
 
-    suspend fun deleteNote(note: Note) {
+    fun deleteNote(note: Note) {
         noteDao.deleteNote(note)
     }
 }
