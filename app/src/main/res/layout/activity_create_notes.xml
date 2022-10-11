@@ -118,6 +118,20 @@
                 android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@id/edNoteSubTitle" />
 
+            <ImageView
+                android:id="@+id/imageDeleteIMG"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_margin="8dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/background_delete"
+                android:src="@drawable/ic_delete"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="@id/imageNote"
+                app:layout_constraintTop_toTopOf="@id/imageNote"
+                app:tint="@color/textColor" />
+
             <LinearLayout
                 android:id="@+id/layoutURL"
                 android:layout_width="match_parent"
@@ -140,6 +154,12 @@
                     android:includeFontPadding="false"
                     android:textSize="13sp" />
 
+                <ImageView
+                    android:id="@+id/imageDeleteURL"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/ic_delete"
+                    app:tint="@color/color_red" />
 
             </LinearLayout>
 

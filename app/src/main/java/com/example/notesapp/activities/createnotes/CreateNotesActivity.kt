@@ -58,6 +58,29 @@ class CreateNotesActivity : AppCompatActivity() {
             showAddURLDialog()
         }
         setViewOrUpdateNote()
+        binding.imageDeleteIMG.setOnClickListener {
+            binding.imageNote.visibility = View.GONE
+            binding.imageDeleteIMG.visibility = View.GONE
+            binding.imageNote.setImageBitmap(null)
+            selectImage = ""
+            Snackbar.make(binding.root, "Delete Image Successfully", Snackbar.LENGTH_LONG)
+                .setAction(getString(R.string.retry_delete)) {
+                    binding.imageNote.visibility = View.VISIBLE
+                    binding.imageDeleteIMG.visibility = View.VISIBLE
+                    binding.imageNote.setImageBitmap(BitmapFactory.decodeFile(alReadyNote.imagePath))
+                    selectImage = alReadyNote.imagePath
+                }.show()
+        }
+        binding.imageDeleteURL.setOnClickListener {
+            binding.layoutURL.visibility = View.GONE
+            binding.textWebURL.text = ""
+            binding.imageNote.setImageBitmap(BitmapFactory.decodeFile(alReadyNote.imagePath))
+            Snackbar.make(binding.root, "Delete URL Successfully", Snackbar.LENGTH_LONG)
+                .setAction("") {
+
+                }.show()
+
+        }
     }
 
     private fun setViewOrUpdateNote() {
@@ -67,10 +90,12 @@ class CreateNotesActivity : AppCompatActivity() {
             binding.edNoteMain.setText(alReadyNote.noteText)
             if (alReadyNote.imagePath.isNotEmpty() && alReadyNote.imagePath != null) {
                 binding.imageNote.setImageBitmap(BitmapFactory.decodeFile(alReadyNote.imagePath))
+                selectImage = alReadyNote.imagePath
                 binding.imageNote.visibility = View.VISIBLE
+                binding.imageDeleteIMG.visibility = View.VISIBLE
             }
-
-            if (alReadyNote.webLink.isEmpty() && alReadyNote.webLink == null) {
+            if (alReadyNote.webLink.isEmpty() && alReadyNote.webLink != null) {
+                binding.textWebURL.text = alReadyNote.webLink
                 binding.layoutURL.visibility = View.GONE
             } else {
                 binding.textWebURL.text = alReadyNote.webLink
@@ -86,6 +111,8 @@ class CreateNotesActivity : AppCompatActivity() {
         val title = binding.edNoteTitle.text.toString()
         val subTitle = binding.edNoteSubTitle.text.toString()
         val noteMain = binding.edNoteMain.text.toString()
+        val linkUrl = binding.textWebURL.text.toString()
+
         if (checkNote(title, subTitle, noteMain)) {
             //Create Note Object
             val note = Note(
@@ -96,10 +123,12 @@ class CreateNotesActivity : AppCompatActivity() {
                 noteMain,
                 selectImage,
                 selectColor,
-                binding.textWebURL.text.toString()
+                linkUrl
             )
             if (intent.getBooleanExtra("isViewOrUpdate", false)) {
                 note.id = alReadyNote.id
+                note.imagePath = selectImage
+//                alReadyNote.imagePath = note.imagePath
                 createViewModel.updateNote(note)
                 Snackbar.make(binding.root, "Successfully Update", Snackbar.LENGTH_LONG).show()
             } else {
@@ -111,13 +140,17 @@ class CreateNotesActivity : AppCompatActivity() {
         }
         Coroutines.io {
             runCatching {
-                delay(3000)
+                delay(2500)
                 finish()
             }
         }
     }
 
-    private fun checkNote(title: String, subTitle: String, noteMain: String): Boolean {
+    private fun checkNote(
+        title: String,
+        subTitle: String,
+        noteMain: String,
+    ): Boolean {
         return !(TextUtils.isEmpty(title) && TextUtils.isEmpty(subTitle) && TextUtils.isEmpty(
             noteMain
         ))
@@ -224,9 +257,12 @@ class CreateNotesActivity : AppCompatActivity() {
     private fun showAddURLDialog() {
         CreateDialog(R.layout.layout_add_url, this, 0).also { dialog ->
             val urlink = dialog.findViewById<EditText>(R.id.edAddURL)
+            if (intent.getBooleanExtra("isViewOrUpdate", false)) {
+                dialog.findViewById<EditText>(R.id.edAddURL).setText(alReadyNote.webLink)
+            }
             urlink.requestFocus()
             dialog.findViewById<View>(R.id.textAdd).setOnClickListener {
-                if (urlink.text.isEmpty()) {
+                if (urlink.text.isEmpty() && urlink != null) {
                     Snackbar.make(binding.root, "No URL", Snackbar.LENGTH_LONG).show()
                     dialog.dismiss()
                 } else {

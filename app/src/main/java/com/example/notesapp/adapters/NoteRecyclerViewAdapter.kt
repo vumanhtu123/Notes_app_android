@@ -47,8 +47,6 @@ class NoteRecyclerViewAdapter(
                 if (imagePath != null) {
                     binding.imageViewNote.setImageBitmap(BitmapFactory.decodeFile(imagePath))
                     binding.imageViewNote.visibility = View.VISIBLE
-                } else {
-                    binding.imageViewNote.visibility = View.GONE
                 }
                 binding.layoutNote.setOnClickListener {
                     noteClickListeners.noteClickUpDate(allNotesList[position], position)

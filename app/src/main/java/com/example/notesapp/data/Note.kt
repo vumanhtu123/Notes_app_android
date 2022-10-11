@@ -20,9 +20,10 @@ data class Note(
     @ColumnInfo(name = "note_text")
     val noteText: String,
     @ColumnInfo(name = "image_path")
-    val imagePath: String,
+    var imagePath: String,
     @ColumnInfo(name = "color")
     val color: String,
     @ColumnInfo(name = "web_link")
-    val webLink: String
+    var webLink: String
+
 ) : Parcelable
