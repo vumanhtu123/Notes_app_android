@@ -12,11 +12,13 @@ import android.text.TextUtils
 import android.view.View
 import android.widget.EditText
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.example.notesapp.R
 import com.example.notesapp.data.Note
+import com.example.notesapp.database.NoteDataBase
 import com.example.notesapp.databinding.ActivityCreateNotesBinding
+import com.example.notesapp.repositories.NoteRepository
 import com.example.notesapp.utilities.Coroutines
 import com.example.notesapp.utilities.CreateDialog
 import com.example.notesapp.viewmodels.CreateViewModel
@@ -31,9 +33,7 @@ import java.util.*
 
 class CreateNotesActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCreateNotesBinding
-    private val createViewModel: CreateViewModel by viewModels {
-        MyViewModelFactory(application)
-    }
+    private lateinit var createViewModel: CreateViewModel
     private val formatter =
         SimpleDateFormat("EEEE, dd MMMM yyyy HH:mm a", Locale.getDefault()).format(
             Date()
@@ -46,6 +46,7 @@ class CreateNotesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityCreateNotesBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setUpViewModel()
         binding.imgBack.setOnClickListener {
             onBackPressed()
         }
@@ -54,32 +55,61 @@ class CreateNotesActivity : AppCompatActivity() {
             insertDataToDataBase()
         }
         initMiscellaneous()
-        binding.layoutMiscellaneous.layoutAddUrl.setOnClickListener {
-            showAddURLDialog()
-        }
         setViewOrUpdateNote()
         binding.imageDeleteIMG.setOnClickListener {
-            binding.imageNote.visibility = View.GONE
-            binding.imageDeleteIMG.visibility = View.GONE
-            binding.imageNote.setImageBitmap(null)
-            selectImage = ""
-            Snackbar.make(binding.root, "Delete Image Successfully", Snackbar.LENGTH_LONG)
-                .setAction(getString(R.string.retry_delete)) {
-                    binding.imageNote.visibility = View.VISIBLE
-                    binding.imageDeleteIMG.visibility = View.VISIBLE
-                    binding.imageNote.setImageBitmap(BitmapFactory.decodeFile(alReadyNote.imagePath))
-                    selectImage = alReadyNote.imagePath
-                }.show()
+            deleteImage()
         }
         binding.imageDeleteURL.setOnClickListener {
-            binding.layoutURL.visibility = View.GONE
-            binding.textWebURL.text = ""
-            binding.imageNote.setImageBitmap(BitmapFactory.decodeFile(alReadyNote.imagePath))
-            Snackbar.make(binding.root, "Delete URL Successfully", Snackbar.LENGTH_LONG)
-                .setAction("") {
+            deleteUrl()
+        }
+        if (intent.getBooleanExtra("isAddUrl",false)){
+            binding.textWebURL.text = intent.getStringExtra("url")
+            binding.layoutURL.visibility = View.VISIBLE
+        }
+        showAddURLDialog()
+        showDeleteNote()
+    }
 
-                }.show()
+    private fun deleteUrl() {
+        binding.layoutURL.visibility = View.GONE
+        binding.textWebURL.text = ""
+        binding.imageNote.setImageBitmap(BitmapFactory.decodeFile(alReadyNote.imagePath))
+        Snackbar.make(binding.root, "Delete URL Successfully", Snackbar.LENGTH_LONG).show()
+//                .setAction(getString(R.string.Retry_delete_URL)) {
+//                    binding.layoutURL.visibility = View.VISIBLE
+//                    binding.textWebURL.text = alReadyNote.webLink
+//                }.show()
+    }
 
+    private fun deleteImage() {
+        binding.imageNote.visibility = View.GONE
+        binding.imageDeleteIMG.visibility = View.GONE
+        binding.imageNote.setImageBitmap(null)
+        selectImage = ""
+        Snackbar.make(binding.root, "Delete Image Successfully", Snackbar.LENGTH_LONG)
+            .setAction(getString(R.string.retry_delete)) {
+                binding.imageNote.visibility = View.VISIBLE
+                binding.imageDeleteIMG.visibility = View.VISIBLE
+                binding.imageNote.setImageBitmap(BitmapFactory.decodeFile(alReadyNote.imagePath))
+                selectImage = alReadyNote.imagePath
+            }.show()
+    }
+
+    private fun showDeleteNote() {
+        if (intent.getBooleanExtra("isViewOrUpdate", false)) {
+            binding.layoutMiscellaneous.layoutDelete.visibility = View.VISIBLE
+            binding.layoutMiscellaneous.layoutDelete.setOnClickListener {
+                CreateDialog(R.layout.layout_delete, this, 0).also { dialog ->
+                    dialog.findViewById<View>(R.id.tvDeleteNote).setOnClickListener {
+                        createViewModel.deleteNote(alReadyNote)
+                        dialog.dismiss()
+                        finish()
+                    }
+                    dialog.findViewById<View>(R.id.tvCancelDelete).setOnClickListener {
+                        dialog.dismiss()
+                    }
+                }
+            }
         }
     }
 
@@ -128,7 +158,6 @@ class CreateNotesActivity : AppCompatActivity() {
             if (intent.getBooleanExtra("isViewOrUpdate", false)) {
                 note.id = alReadyNote.id
                 note.imagePath = selectImage
-//                alReadyNote.imagePath = note.imagePath
                 createViewModel.updateNote(note)
                 Snackbar.make(binding.root, "Successfully Update", Snackbar.LENGTH_LONG).show()
             } else {
@@ -255,26 +284,39 @@ class CreateNotesActivity : AppCompatActivity() {
     }
 
     private fun showAddURLDialog() {
-        CreateDialog(R.layout.layout_add_url, this, 0).also { dialog ->
-            val urlink = dialog.findViewById<EditText>(R.id.edAddURL)
-            if (intent.getBooleanExtra("isViewOrUpdate", false)) {
-                dialog.findViewById<EditText>(R.id.edAddURL).setText(alReadyNote.webLink)
-            }
-            urlink.requestFocus()
-            dialog.findViewById<View>(R.id.textAdd).setOnClickListener {
-                if (urlink.text.isEmpty() && urlink != null) {
-                    Snackbar.make(binding.root, "No URL", Snackbar.LENGTH_LONG).show()
-                    dialog.dismiss()
-                } else {
-                    binding.textWebURL.text = urlink.text.toString()
-                    binding.layoutURL.visibility = View.VISIBLE
+        binding.layoutMiscellaneous.layoutAddUrl.setOnClickListener {
+            CreateDialog(R.layout.layout_add_url, this, 0).also { dialog ->
+                val urlink = dialog.findViewById<EditText>(R.id.edAddURL)
+                if (intent.getBooleanExtra("isViewOrUpdate", false)) {
+                    dialog.findViewById<EditText>(R.id.edAddURL).setText(alReadyNote.webLink)
+                }
+                urlink.requestFocus()
+                dialog.findViewById<View>(R.id.textAdd).setOnClickListener {
+                    if (urlink.text.isEmpty() && urlink != null) {
+                        Snackbar.make(binding.root, "No URL", Snackbar.LENGTH_LONG).show()
+                        dialog.dismiss()
+                    } else {
+                        binding.textWebURL.text = urlink.text.toString()
+                        binding.layoutURL.visibility = View.VISIBLE
+                        dialog.dismiss()
+                    }
+                }
+                dialog.findViewById<View>(R.id.textCancel).setOnClickListener {
                     dialog.dismiss()
                 }
+                dialog.show()
             }
-            dialog.findViewById<View>(R.id.textCancel).setOnClickListener {
-                dialog.dismiss()
-            }
-            dialog.show()
         }
+    }
+
+    private fun setUpViewModel() {
+        val noteRepository = NoteRepository(
+            noteDataBase = NoteDataBase(this)
+        )
+        val viewModelFactory =
+            MyViewModelFactory(
+                application, noteRepository
+            )
+        createViewModel = ViewModelProvider(this, viewModelFactory).get(CreateViewModel::class.java)
     }
 }

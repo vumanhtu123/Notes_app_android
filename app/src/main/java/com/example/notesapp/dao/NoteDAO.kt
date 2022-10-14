@@ -1,6 +1,7 @@
 package com.example.notesapp.dao
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.*
 import com.example.notesapp.data.Note
 
@@ -17,4 +18,7 @@ interface NoteDAO {
 
     @Update
     fun updateNote(note: Note)
+
+    @Query("SELECT * FROM NOTES_TABLE WHERE title LIKE :query OR subtitle LIKE :query")
+    fun searchNote(query: String?): LiveData<List<Note>>
 }

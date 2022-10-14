@@ -1,23 +1,17 @@
 package com.example.notesapp.repositories
 
-import androidx.lifecycle.LiveData
-import com.example.notesapp.dao.NoteDAO
 import com.example.notesapp.data.Note
+import com.example.notesapp.database.NoteDataBase
 
-class NoteRepository(private val noteDao: NoteDAO) {
-//    val readAllData: LiveData<List<Note>> = noteDao.getAllNotes()
-    fun getAllNotes():LiveData<List<Note>>{
-        return noteDao.getAllNotes()
-    }
-    fun addNote(note: Note) {
-        noteDao.insertNote(note)
-    }
+class NoteRepository(private val noteDataBase: NoteDataBase) {
+    //    val readAllData: LiveData<List<Note>> = noteDao.getAllNotes()
+    fun getAllNotes() = noteDataBase.getNoteDao().getAllNotes()
 
-    fun updateNote(note: Note) {
-        noteDao.updateNote(note)
-    }
+    fun addNote(note: Note) = noteDataBase.getNoteDao().insertNote(note)
 
-    fun deleteNote(note: Note) {
-        noteDao.deleteNote(note)
-    }
+    fun updateNote(note: Note) = noteDataBase.getNoteDao().updateNote(note)
+
+    fun deleteNote(note: Note) = noteDataBase.getNoteDao().deleteNote(note)
+
+    fun searchNote(query: String?) = noteDataBase.getNoteDao().searchNote(query)
 }

@@ -166,6 +166,7 @@
             android:textColor="@color/textColor"
             android:textSize="12sp" />
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/layoutAddUrl"
         android:layout_width="match_parent"
@@ -187,9 +188,36 @@
             android:layout_marginStart="10dp"
             android:fontFamily="@font/ubuntu_medium"
             android:includeFontPadding="false"
-            android:text="Add Url"
+            android:text="@string/add_url1"
             android:textColor="@color/textColor"
             android:textSize="12sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutDelete"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_margin="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/ic_delete"
+            app:tint="@color/color_red" />
+
+        <TextView
+            android:includeFontPadding="false"
+            android:fontFamily="@font/ubuntu_medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="@string/delete_note1"
+            android:textColor="@color/color_red"
+            android:textSize="12sp"/>
+
     </LinearLayout>
 
 

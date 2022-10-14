@@ -7,17 +7,30 @@ import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.notesapp.data.Note
 import com.example.notesapp.databinding.ItemContainerBinding
 import com.example.notesapp.utilities.NoteClickListeners
 
-class NoteRecyclerViewAdapter(
+class NoteAdapter(
     val context: Context,
-    private val allNotesList: List<Note>,
     private val noteClickListeners: NoteClickListeners
 
-) : RecyclerView.Adapter<NoteRecyclerViewAdapter.NoteViewHolder>() , NoteClickListeners{
+) : RecyclerView.Adapter<NoteAdapter.NoteViewHolder>(), NoteClickListeners {
+
+    private var differCallback = object : DiffUtil.ItemCallback<Note>() {
+        override fun areItemsTheSame(oldItem: Note, newItem: Note): Boolean {
+            return oldItem.id == newItem.id && oldItem.title == newItem.title && oldItem.subtitle == newItem.subtitle
+        }
+
+        override fun areContentsTheSame(oldItem: Note, newItem: Note): Boolean {
+            return oldItem == newItem
+        }
+
+    }
+    var differ = AsyncListDiffer(this, differCallback)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
         val binding =
@@ -27,7 +40,7 @@ class NoteRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
         with(holder) {
-            with(allNotesList[position]) {
+            with(differ.currentList[position]) {
                 binding.textTitle.text = title
                 binding.textDateTime.text = datetime
                 if (subtitle.isEmpty()) {
@@ -49,14 +62,14 @@ class NoteRecyclerViewAdapter(
                     binding.imageViewNote.visibility = View.VISIBLE
                 }
                 binding.layoutNote.setOnClickListener {
-                    noteClickListeners.noteClickUpDate(allNotesList[position], position)
+                    noteClickListeners.noteClickUpDate(differ.currentList[position], position)
                 }
             }
         }
     }
 
     override fun getItemCount(): Int {
-        return allNotesList.size
+        return differ.currentList.size
     }
 
     inner class NoteViewHolder(var binding: ItemContainerBinding) :
