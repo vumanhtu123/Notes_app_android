@@ -1,5 +1,6 @@
 package com.example.notesapp.activities.splash
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,6 +9,7 @@ import com.example.notesapp.databinding.ActivitySplashBinding
 import com.example.notesapp.utilities.Coroutines
 import kotlinx.coroutines.delay
 
+@SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
     lateinit var binding: ActivitySplashBinding
     override fun onCreate(savedInstanceState: Bundle?) {
